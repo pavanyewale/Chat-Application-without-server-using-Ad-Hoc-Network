@@ -2,8 +2,8 @@
 
 #Protocols
 
-*All machines will acts as a server as well as client .
-*When one machine have to send a msg to another machine it will acts a client
+* All machines will acts as a server as well as client .
+* When one machine have to send a msg to another machine it will acts a client
 otherwise its a server.
 * All machines contains a information about all other machines which are within the range .
 * All machines will update the online machines list (i.e. which neibours are online ) after a specific time.
