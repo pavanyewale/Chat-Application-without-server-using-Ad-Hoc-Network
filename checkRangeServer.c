@@ -7,13 +7,11 @@
 #include <sys/socket.h> 
 #include <arpa/inet.h> 
 #include <netinet/in.h> 
-  
 #define PORTS     8081 
 #define PORTC     8080
 #define MAXLINE 8 
-  
-// Driver code 
-int main() { 
+int main() 
+{ 
     int sockfd; 
     char buffer[MAXLINE]; 
     char *msg="ATAMAM";
@@ -21,14 +19,15 @@ int main() {
     struct sockaddr_in servaddr, cliaddr; 
       
     // Creating socket file descriptor 
-    if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
-        perror("socket creation failed"); 
+    if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) 
+    { 
+      	perror("socket creation failed"); 
         exit(EXIT_FAILURE);
     } 
       
     memset(&servaddr, 0, sizeof(servaddr)); 
     memset(&cliaddr, 0, sizeof(cliaddr)); 
-      
+    cliaddr.sin_port = htons(PORTC);//setting port of client machine
     // Filling server inform1ation 
     servaddr.sin_family    = AF_INET; // IPv4 
     servaddr.sin_addr.s_addr = INADDR_ANY; 
@@ -44,12 +43,10 @@ int main() {
     int len, n; 
     while(1)
     {
-    	recvfrom(sockfd, (char *)buffer, MAXLINE,MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len);
+    	recvfrom(sockfd, (char *)buffer, MAXLINE,MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len);//it will wait till it not gets a msg
 	if(strncmp(buffer,msg,6)==0)
-    		{	cliaddr.sin_port = htons(PORTC);
-			sendto(sockfd, (const char *)msg, strlen(msg), MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len);
-		       inet_ntop(AF_INET,&(cliaddr.sin_addr), addr, INET_ADDRSTRLEN);
-	//	printf("msg sent to :%s",addr);
+    		{	
+			sendto(sockfd, (const char *)msg, strlen(msg), MSG_DONTWAIT, (const struct sockaddr *) &cliaddr, len);
 		}
     }
       
