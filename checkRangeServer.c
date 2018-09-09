@@ -27,7 +27,6 @@ int main()
       
     memset(&servaddr, 0, sizeof(servaddr)); 
     memset(&cliaddr, 0, sizeof(cliaddr)); 
-    cliaddr.sin_port = htons(PORTC);//setting port of client machine
     // Filling server inform1ation 
     servaddr.sin_family    = AF_INET; // IPv4 
     servaddr.sin_addr.s_addr = INADDR_ANY; 
@@ -46,6 +45,8 @@ int main()
     	recvfrom(sockfd, (char *)buffer, MAXLINE,MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len);//it will wait till it not gets a msg
 	if(strncmp(buffer,msg,6)==0)
     		{	
+    			//setting port of client machine
+    			cliaddr.sin_port = htons(PORTC);
 			sendto(sockfd, (const char *)msg, strlen(msg), MSG_DONTWAIT, (const struct sockaddr *) &cliaddr, len);
 		}
     }
