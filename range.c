@@ -18,6 +18,7 @@
 #define MSEC 5000
 #define SEC  5
 #define MSG "ATAMAM"
+#define my_addr 20     //***************change it according to yours********************************//
 #define fname "neibours"
 FILE *nfp;
 int neiboursold[255];  
@@ -123,7 +124,7 @@ void * receivePackets()
 			{
 				last_addr=atoi(addr+10);
 				fprintf(stdout,"\nmsg from %d",last_addr);
-				if(last_addr>0&&last_addr<255)//check the iddentity of neibours
+				if(last_addr>0&&last_addr<255&&last_addr!=my_addr)//check the iddentity of neibours
 					neiboursnew[last_addr]=1; //updating status as live
 			}
 
