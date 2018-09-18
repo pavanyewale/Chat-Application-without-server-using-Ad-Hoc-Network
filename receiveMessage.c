@@ -3,6 +3,8 @@
 #include"filehandling.h"
 void receiveMessageServer() 
 { 
+	fprintf(logfile,"\n receive message server ");
+	fflush(logfile);
     int server_fd, new_socket, valread; 
     struct sockaddr_in address; 
     int opt = 1; 
@@ -15,6 +17,8 @@ void receiveMessageServer()
         perror("socket failed"); 
         exit(EXIT_FAILURE); 
     } 
+	fprintf(logfile,"\nsocket created  ");
+	fflush(logfile);
        
     // Forcefully attaching socket to the port 8080 
     if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) 
@@ -22,6 +26,8 @@ void receiveMessageServer()
         perror("setsockopt"); 
         exit(EXIT_FAILURE); 
     } 
+	fprintf(logfile,"\n reuse permission given  ");
+	fflush(logfile);
     address.sin_family = AF_INET; 
     address.sin_addr.s_addr = INADDR_ANY; 
     address.sin_port = htons( message_receiver_port ); 
@@ -32,6 +38,8 @@ void receiveMessageServer()
         perror("bind failed"); 
         exit(EXIT_FAILURE); 
     } 
+	fprintf(logfile,"\n binding done  ");
+	fflush(logfile);
     if (listen(server_fd, 3) < 0) 
     { 
         perror("listen"); 
@@ -44,11 +52,15 @@ void receiveMessageServer()
         perror("accept"); 
         exit(EXIT_FAILURE); 
     } 
-    while(read( new_socket , buff, 1024)>0) 
+
+    if(read( new_socket , buff, msg_q_size)>0) 
     	{
 		//check msg is my message or someone's else i.e checking sender
 		if((int)buff[from_start]!=my_temp_addr)//
-		{	//checking msg is ack or msg
+		{	
+			fprintf(logfile,"\n message from %d to %d ack/msg flag=%d  ,msgno=%d",(int)buff[from_start],(int)buff[to_start],(int)buff[a_m_flag_start],btoi((char*)&buff[msg_no_start]));
+			fflush(logfile);
+			//checking msg is ack or msg
 			if((int)buff[a_m_flag_start])//msg
 			{
 				if((int)buff[to_start]==my_addr)//my message
@@ -58,9 +70,6 @@ void receiveMessageServer()
 				else//someones else message
 				{	
 					create_M_Q_Entry((char*)&buff[0],(char*)&buffer[0]);
-					for(int i=0;i<msg_q_size;i++)
-						fprintf(fp,"%c",buffer[i]);
-					fflush(fp);
 					if(write_msg(buffer))
 					{
 						send_message(buffer);
@@ -77,17 +86,26 @@ void receiveMessageServer()
 			//check if its ack
 			if(!(int)buffer[smsg_start+a_m_flag_start])
 			
-			{	
+			{
+				
+			fprintf(logfile,"\n my message ack received msg no %d   ",btoi((char*)&buff[msg_no_start]));
+			fflush(logfile);
 				msg_ack_update((char*)&buffer[smsg_start]);
 			}
 		}
 	}
     }
+    
+			fprintf(logfile,"\n returning from sendmessage  ");
+			fflush(logfile);
     return ; 
 } 
 
 int main()
 {
+	logfile=fopen("recvLogfile","w");
 	openfile();
+	fprintf(logfile,"\n  ");
+	fflush(logfile);
 	receiveMessageServer();
 }

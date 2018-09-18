@@ -2,6 +2,9 @@
 #include"functions.h"
 void create_msg(char *mssg,int to)
 {
+	
+	fprintf(logfile,"\n create_msg");
+	fflush(logfile);	
 	char msg[smsg_size],q_msg[msg_q_size];
 	int i;
 	unsigned char *p;
@@ -33,6 +36,9 @@ int main()
 {
 	pthread_t neibours;
 	pthread_create(&neibours,NULL,updateNeiboursList,NULL);
+	logfile=fopen("sendLogfile","w");
+	fprintf(logfile,"\nmain() ");
+	fflush(logfile);	
 	while(1)
 	{	int to;
 		char msg[512];

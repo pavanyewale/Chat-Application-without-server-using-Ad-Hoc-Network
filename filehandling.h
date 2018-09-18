@@ -8,7 +8,8 @@ void errormsg(char *msg,int flag)
 //if file not exist create file
 void createfile()
 {
-	
+	fprintf(logfile,"\n create file ");
+	fflush(logfile);	
 	sqfp = fopen(sqfpn,"w+");
 	if(!sqfp)
 		errormsg("file creating error",1);
@@ -19,6 +20,8 @@ void createfile()
 //open msg file queue
 void openfile()
 {	
+	fprintf(logfile,"\n open file ");
+	fflush(logfile);	
 	mmfp = fopen("mymessage","r+");
 	if(mmfp==NULL)
 		mmfp=fopen("mymessage","w");
@@ -37,6 +40,8 @@ void openfile()
 
 int hextoint(unsigned char *no)
 {
+	fprintf(logfile,"\n hex to int");
+	fflush(logfile);	
 	int result = 0;
 	result+=no[0]<<0;//becase first byte is from ans akn
 	result+=no[1]<<8;
@@ -47,8 +52,8 @@ int hextoint(unsigned char *no)
 //write my message in file
 int write_my_msg(char *msg)
 {
-	fprintf(logfile,"\nwritemy message");
-	fflush(logfile);
+	fprintf(logfile,"\nwrite_my_msg ");
+	fflush(logfile);	
 	int nobyte=-1;
 	int len;
 	char buffere[91];//message size
@@ -58,9 +63,6 @@ int write_my_msg(char *msg)
 		nobyte = fread(buffere,1,91,mmfp);
 		if(nobyte>=91)
 			if(hextoint((char*)&msg[2])==hextoint((char*)&buffere[2]) && (int)msg[1]==(int)buffere[1]){
-				fprintf(logfile,"\n message already present");
-				fprintf(logfile,"\n %s",msg);
-				fflush(logfile);
 					return 0;//message already present
 			}
 			else
@@ -71,8 +73,6 @@ int write_my_msg(char *msg)
 			fwrite(msg,1,91,mmfp);
 			fflush(mmfp);
 			len = strlen(msg);
-			fprintf(logfile,"\n message written in my message size %d",len);
-				fflush(logfile);
 			return 1;//message written succefuly
 		}
 
@@ -81,6 +81,8 @@ int write_my_msg(char *msg)
 //write new msg in file success 1 unsucess 0
 int write_msg(char *msg)
 {
+	fprintf(logfile,"\nwrite_msg ");
+	fflush(logfile);	
 	int nobyte=0;
 	long int filepointer=-1;
 	char buffere[msg_q_size];
@@ -123,6 +125,8 @@ int write_msg(char *msg)
 
 void negatesendto(char *str,int from,int to)
 {
+	fprintf(logfile,"\nnegatesendto ");
+	fflush(logfile);	
 	for(from;from<=to;from++)
 		~str[from];//
 
@@ -130,6 +134,8 @@ void negatesendto(char *str,int from,int to)
 //update ack present in queue
 int msg_ack_update(char *msg)
 {
+	fprintf(logfile,"\n msg_ack_update");
+	fflush(logfile);	
 	fseek(sqfp,4,SEEK_SET);
 	char buffere[msg_q_size];
 	int nobyte;

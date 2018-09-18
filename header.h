@@ -38,7 +38,7 @@
 #define addr_format "192.168.1."
 #define addr_format_size (int)strlen(addr_format)
 #define message_receiver_port 8083 //msg receiving server port no 
-FILE *nfp,*mmfp,*sqfp;
+FILE *nfp,*mmfp,*sqfp,*logfile;
 int curr_Msg_No;
 int neibours[255];
 int curr_msg_no=0,sockfd;
