@@ -7,6 +7,8 @@ void receiveMessageServer()
 	fflush(logfile);
     int server_fd, new_socket, valread; 
     struct sockaddr_in address; 
+	pthread_t neibours;
+	pthread_create(&neibours,NULL,updateNeiboursList,NULL);
     int opt = 1; 
     int addrlen = sizeof(address); 
     char buffer[msg_q_size] = {0};
@@ -58,7 +60,7 @@ void receiveMessageServer()
 		//check msg is my message or someone's else i.e checking sender
 		if((int)buff[from_start]!=my_temp_addr)//
 		{	
-			fprintf(logfile,"\n message from %d to %d ack/msg flag=%d  ,msgno=%d",(int)buff[from_start],(int)buff[to_start],(int)buff[a_m_flag_start],btoi((char*)&buff[msg_no_start]));
+			fprintf(logfile,"\n message from %d to %d ack/msg flag=%d  ,msgno=%d msg:%s",(int)buff[from_start],(int)buff[to_start],(int)buff[a_m_flag_start],btoi((char*)&buff[msg_no_start]),(char*)&buff[message_start]);
 			fflush(logfile);
 			//checking msg is ack or msg
 			if((int)buff[a_m_flag_start])//msg

@@ -1,25 +1,11 @@
 //This program send packet to the all IP addresses within range (192.168.1.2) to (192.168.1.254) and wait for a response 
 //if there is a response within the a specific time then its means that the machine is online else offline
-#include <stdio.h> 
-#include <stdlib.h> 
-#include <unistd.h> 
-#include <string.h> 
-#include <sys/types.h> 
-#include <sys/socket.h> 
-#include <arpa/inet.h> 
-#include <netinet/in.h> 
-#include<arpa/inet.h>
-#include<pthread.h>
-#include<stdlib.h>
+#include"header.h"
 #include<signal.h>
-#include<sys/mman.h>//mmap(),munmap()
-#define PORTS    8081
-#define MAXLINE 8 
-#define MSEC 5000
-#define SEC  5
 #define MSG "ATAMAM"
-#define my_addr 20     //***************change it according to yours********************************//
+#define MAXLINE 8 
 #define fname "neibours"
+#define PORTS 8081
 FILE *nfp;
 int neiboursold[255];  
 int neiboursnew[255];
@@ -76,9 +62,13 @@ void * updateNeibourTable()
 			neiboursold[i]=neiboursnew[i];
 			neiboursnew[i]=0;
 			if(neiboursold[i])
+			{
 				fprintf(nfp,"%c",0x1);
+			}
 			else
+			{	
 				fprintf(nfp,"%c",0x0);
+			}
 			}
 		fflush(nfp);
 		fseek(nfp,0,SEEK_SET);
@@ -123,7 +113,7 @@ void * receivePackets()
 			if((strncmp(address,addr,10)==0))//check the msg formmat
 			{
 				last_addr=atoi(addr+10);
-				fprintf(stdout,"\nmsg from %d",last_addr);
+				fprintf(stdout,"\n %d is online",last_addr);
 				if(last_addr>0&&last_addr<255&&last_addr!=my_addr)//check the iddentity of neibours
 					neiboursnew[last_addr]=1; //updating status as live
 			}

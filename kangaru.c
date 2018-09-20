@@ -11,7 +11,7 @@ int recSendMessage()
 	while(1)
 	{
 		nobyte = fread(buffere,1,msg_q_size,sqfp);
-		if(nobyte = msg_q_size)
+		if(nobyte == msg_q_size)
 		{
 			bit = send_message(buffere);	
 			if(!bit&&!buffere[smsg_start+a_m_flag_start])
@@ -27,6 +27,8 @@ int recSendMessage()
 		}
 		else
 		{
+			fprintf(stdout,"\n in else ");
+		//	exit(0);
 			fseek(sqfp,4,SEEK_SET);	
 			sleep(10);
 		

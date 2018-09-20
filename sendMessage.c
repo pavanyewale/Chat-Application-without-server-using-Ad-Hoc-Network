@@ -1,5 +1,6 @@
 #include"header.h"
 #include"functions.h"
+#include"filehandling.h"
 void create_msg(char *mssg,int to)
 {
 	
@@ -30,6 +31,8 @@ void create_msg(char *mssg,int to)
 	create_M_Q_Entry(msg,(char*)&q_msg[0]);
 
 	send_message(q_msg);
+	write_msg(q_msg);
+
 }
 
 int main()
@@ -39,6 +42,7 @@ int main()
 	logfile=fopen("sendLogfile","w");
 	fprintf(logfile,"\nmain() ");
 	fflush(logfile);	
+//	openfile();
 	while(1)
 	{	int to;
 		char msg[512];
