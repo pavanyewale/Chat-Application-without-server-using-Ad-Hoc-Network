@@ -68,6 +68,8 @@ void receiveMessageServer()
 				if((int)buff[to_start]==my_addr)//my message
 				{
 					write_my_msg(buff);
+			fprintf(stdout,"\n message from %d  msg:%s",(int)buff[from_start],(char*)&buff[message_start]);
+				
 				}
 				else//someones else message
 				{	
